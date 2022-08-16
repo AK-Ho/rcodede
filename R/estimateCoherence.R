@@ -21,6 +21,7 @@
 #' @param BigTIFF logical if output should be written as BigTIFF.
 #' @param docker logical if a dockerized version of SNAP (mundialis/esa-snap:ubuntu) should be used. Make sure docker is installed and can be run by the user. The image is pulled automatically from dockerhub on first execution.
 #' @param sudo logical if command should be executed or returned with superuser rights
+#' @param snapMainVersion 7 or 8, main Version of SNAP installed on machine
 #'
 #' @return
 #' @export
@@ -68,7 +69,8 @@ estimateCoherence <-
            return = FALSE,
            BigTIFF = FALSE,
            docker = FALSE,
-           sudo = FALSE) {
+           sudo = FALSE,
+           snapMainVersion = 7 ) {
 
     if(BigTIFF) format = "GeoTIFF-BigTIFF" else format = "GeoTIFF"
 
@@ -76,8 +78,13 @@ estimateCoherence <-
 
       if(swath == "all"){
 
-        graph <-
-          system.file("extdata", "coherenceGraphAllSwaths.xml", package = "rcodede")
+        if(snapMainVersion == 7){
+          graph <-
+            system.file("extdata", "coherenceGraphAllSwaths.xml", package = "rcodede")
+        }else{
+          graph <-
+            system.file("extdata", "coherenceGraphAllSwaths_v8.xml", package = "rcodede")
+        }
 
         cmd <- paste0(
           if(docker) paste0("docker run -v /codede:/codede -v /codede/auxdata/orbits/:/root/.snap/auxdata/Orbits/ -v \"/codede/auxdata/SRTMGL1/dem/\":\"/root/.snap/auxdata/dem/SRTM\ 1Sec\ HGT/\" -v $HOME:$HOME -u root --rm --entrypoint /usr/local/snap/bin/gpt mundialis/esa-snap:ubuntu "),
@@ -96,8 +103,13 @@ estimateCoherence <-
 
       } else{
 
-        graph <-
-          system.file("extdata", "coherenceGraphOneSwath.xml", package = "rcodede")
+        if(snapMainVersion == 7){
+          graph <-
+            system.file("extdata", "coherenceGraphOneSwath.xml", package = "rcodede")
+        }else{
+          graph <-
+            system.file("extdata", "coherenceGraphOneSwath_v8.xml", package = "rcodede")
+        }
 
         cmd <- paste0(
           if(docker) paste0("docker run -v /codede:/codede -v /codede/auxdata/orbits/:/root/.snap/auxdata/Orbits/ -v \"/codede/auxdata/SRTMGL1/dem/\":\"/root/.snap/auxdata/dem/SRTM\ 1Sec\ HGT/\" -v $HOME:$HOME -u root --rm --entrypoint /usr/local/snap/bin/gpt mundialis/esa-snap:ubuntu "),
@@ -139,8 +151,13 @@ estimateCoherence <-
 
       if(swath == "all"){
 
-        graph <-
-          system.file("extdata", "coherenceGraphAllSwathsSubset.xml", package = "rcodede")
+        if(snapMainVersion == 7){
+          graph <-
+            system.file("extdata", "coherenceGraphAllSwathsSubset.xml", package = "rcodede")
+        }else{
+          graph <-
+            system.file("extdata", "coherenceGraphAllSwathsSubset_v8.xml", package = "rcodede")
+        }
 
         cmd <- paste0(
           if(docker) paste0("docker run -v /codede:/codede -v /codede/auxdata/orbits/:/root/.snap/auxdata/Orbits/ -v \"/codede/auxdata/SRTMGL1/dem/\":\"/root/.snap/auxdata/dem/SRTM\ 1Sec\ HGT/\" -v $HOME:$HOME -u root --rm --entrypoint /usr/local/snap/bin/gpt mundialis/esa-snap:ubuntu "),
@@ -160,8 +177,14 @@ estimateCoherence <-
 
       } else{
 
-        graph <-
-          system.file("extdata", "coherenceGraphOneSwathSubset.xml", package = "rcodede")
+        if(snapMainVersion == 7){
+          graph <-
+            system.file("extdata", "coherenceGraphOneSwathSubset.xml", package = "rcodede")
+        }else{
+          graph <-
+            system.file("extdata", "coherenceGraphOneSwathSubset_v8.xml", package = "rcodede")
+        }
+
 
         cmd <- paste0(
           if(docker) paste0("docker run -v /codede:/codede -v /codede/auxdata/orbits/:/root/.snap/auxdata/Orbits/ -v \"/codede/auxdata/SRTMGL1/dem/\":\"/root/.snap/auxdata/dem/SRTM\ 1Sec\ HGT/\" -v $HOME:$HOME -u root --rm --entrypoint /usr/local/snap/bin/gpt mundialis/esa-snap:ubuntu "),
